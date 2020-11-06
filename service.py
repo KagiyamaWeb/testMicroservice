@@ -5,6 +5,7 @@ import urllib
 import datetime
 
 from flask import Flask
+from flask import jsonify
 
 app = Flask(__name__)
 cur_url = 'https://www.cbr.ru/scripts/XML_valFull.asp'
@@ -17,7 +18,7 @@ def get_currency():
     cur_list = []
     for item in currency['Valuta']['Item']:
         cur_list.append((item["ISO_Char_Code"], item["EngName"]))
-    return json.dumps(cur_list, indent = 3)
+    return jsonify(cur_list)
 
 @app.route("/api/course/<currency>/<first_date>/<second_date>", methods=['GET'])
 def get_difference(currency, first_date, second_date):
@@ -38,7 +39,7 @@ def get_difference(currency, first_date, second_date):
             snd_value = round(float(cur['Value'].replace(',','.')), 2) 
 
     difference = round((snd_value - fst_value), 2)
-    return json.dumps((fst_value, snd_value, difference), indent = 3)
+    return jsonify((fst_value, snd_value, difference))
 
 
     
